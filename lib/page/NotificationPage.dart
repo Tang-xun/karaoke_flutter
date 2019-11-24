@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -25,7 +26,9 @@ class _NotificationPageState extends State<NotificationPage> {
             style: TextStyle(color: Colors.black, fontSize: 16)),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          print("notification float press");
+        },
         child: Icon(FontAwesomeIcons.featherAlt),
       ),
     );

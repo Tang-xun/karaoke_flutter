@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -22,7 +23,7 @@ class _MessagePageState extends State<MessagePage> {
           size: 35,
         ),
         title: Text(
-          "MessagePage",
+          "Setting",
           style: TextStyle(color: Colors.black, fontSize: 16),
         ),
         actions: <Widget>[
@@ -35,8 +36,15 @@ class _MessagePageState extends State<MessagePage> {
           )
         ],
       ),
+      body: Image.network(
+        "https://upload.jianshu.io/users/upload_avatars/3884536/d847a50f1da0.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/240/h/240",
+          height: 300,
+          width: 400,
+          alignment: Alignment.center,),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          print("message float press");
+        },
         child: Icon(FontAwesomeIcons.envelope),
       ),
     );

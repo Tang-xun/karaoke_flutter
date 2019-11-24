@@ -5,13 +5,15 @@ import 'package:karaoke_flutter/page/MessagePage.dart';
 import 'package:karaoke_flutter/page/NotificationPage.dart';
 import 'package:karaoke_flutter/page/SearchPage.dart';
 import 'package:karaoke_flutter/page/UserFeedPage.dart';
+import 'package:karaoke_flutter/utils/LogUtils.dart';
 
 void main() => runApp(MyApp());
-
+var TAG = "Main";
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    LogUtils.i(TAG, "build :::: Flutter Demo ");
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -36,10 +38,10 @@ class _MyHomePageState extends State<HomePage> {
   var selectIndex = 0;
 
   var pages = [UserFeedPage(), SearchPage(), NotificationPage(), MessagePage()];
-  var navBarTexts = ["me", "search", "notificatioin", "message"];
+  var navBarTexts = ["me", "friends", "notice", "message"];
   var navBarIcons = [
     FontAwesomeIcons.user,
-    FontAwesomeIcons.search,
+    FontAwesomeIcons.userFriends,
     FontAwesomeIcons.bell,
     FontAwesomeIcons.envelope
   ];
@@ -48,19 +50,74 @@ class _MyHomePageState extends State<HomePage> {
   Widget build(context) {
     return Scaffold(
         body: pages[selectIndex],
-        bottomNavigationBar: BottomNavigationBar(
-            items: [
-              _genBottomNavigationBar(0),
-              _genBottomNavigationBar(1),
-              _genBottomNavigationBar(2),
-              _genBottomNavigationBar(3),
-            ],
-            onTap: (index) {
-              setState(() {
-                selectIndex = index;
-              });
-            },
-            currentIndex: selectIndex));
+        bottomNavigationBar: BottomAppBar(
+            child: Row(
+          children: <Widget>[
+            _genBottomButtons(0),
+            _genBottomButtons(1),
+            _genBottomButtons(2),
+            _genBottomButtons(3),
+          ],
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisSize: MainAxisSize.max,
+        ))
+
+        // bottomNavigationBar: BottomNavigationBar(
+        //     items: [
+        //       _genBottomNavigationBar(0),
+        //       _genBottomNavigationBar(1),
+        //       _genBottomNavigationBar(2),
+        //       _genBottomNavigationBar(3),
+        //     ],
+        //     selectedFontSize: 8,
+        //     unselectedFontSize: 8,
+        //     selectedItemColor: Colors.blue,
+        //     unselectedItemColor: Colors.blueGrey,
+        //     onTap: (index) {
+        //       setState(() {
+        //         selectIndex = index;
+        //       });
+        //     },
+        //     currentIndex: selectIndex)
+        );
+  }
+
+  Column _genBottomButtons(int index) {
+    var _color = _genNavItemColor(index);
+    var _text = navBarTexts[index];
+    var _icon = navBarIcons[index];
+
+    return Column(
+
+      children: [
+        IconButton(
+          icon: Icon(
+            _icon,
+            size: 20,
+          ),
+          color: _color,
+          onPressed: () {
+            setState(() {
+              selectIndex = index;
+            });
+          },
+        ),
+        SizedBox(
+          height: 0,
+          width: 1,
+        ),
+        Text(
+          _text,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 12, color: _color),
+        ),
+        SizedBox(
+          width: 1,
+          height: 2,
+        )
+      ],
+      mainAxisSize: MainAxisSize.min,
+    );
   }
 
   /*
@@ -73,13 +130,15 @@ class _MyHomePageState extends State<HomePage> {
 
     if (index < 0) throw Exception("invalid index ");
 
-    if (index >= pages.length || index >= navBarIcons.length || index >= navBarIcons.length) {
-        throw Exception("index overflow resource's size ");
-    } 
+    if (index >= pages.length ||
+        index >= navBarIcons.length ||
+        index >= navBarIcons.length) {
+      throw Exception("index overflow resource's size ");
+    }
 
     return BottomNavigationBarItem(
         title: Text(
-          navBarTexts[index],
+          "", // "navBarTexts[index]",
           style: TextStyle(
               fontSize: 10, fontWeight: FontWeight.normal, color: _color),
         ),
