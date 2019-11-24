@@ -3,7 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:karaoke_flutter/utils/LogUtils.dart';
+import 'package:karaoke_flutter/channel/ComUtils.dart';
+import '../channel/LogUtils.dart';
 
 class UserFeedPage extends StatefulWidget {
   @override
@@ -58,13 +59,23 @@ class UserFeedPageState extends State<UserFeedPage> {
           return new ListView.builder(
             itemCount: repoData.length,
             itemBuilder: (BuildContext context, int index) {
-              var name = repoData[index]["name"];
-              int forks = repoData[index]["forks"];
+              var itemData = repoData[index];
+
+              var name = itemData["name"];
+              int forks = itemData["forks"];
+
               LogUtils.i(TAG, "name : $name forks: $forks");
-              return new Card(
+
+              return new GestureDetector(
+                  onTap: () {
+                    LogUtils.i(TAG ,"click ::: ${itemData["name"]}");
+                    ComUtils.toastS(itemData["name"]);
+                  },
+                  
+                  child: Card(
                   elevation: 2.0,
                   borderOnForeground: true,
-                  margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                  margin: EdgeInsets.all(5),
                   child: Row(
                     children: <Widget>[
                       Container(
@@ -74,53 +85,75 @@ class UserFeedPageState extends State<UserFeedPage> {
                             height: 45,
                             alignment: Alignment.centerLeft,
                           ),
-                          margin: EdgeInsets.fromLTRB(15, 20, 15, 20)),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "${repoData[index]["name"]}",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            '${repoData[index]["description"]}',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                            softWrap: true,
-                          ),
-                          Row(
-                            children: <Widget>[
-                              _genStartIcon(0, forks),
-                              _genStartIcon(1, forks),
-                              _genStartIcon(2, forks),
-                              _genStartIcon(3, forks),
-                              _genStartIcon(4, forks),
-                              Text(
-                                '${repoData[index]["created_at"]}',
+                          margin: EdgeInsets.fromLTRB(15, 20, 15, 20),),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                              child: Text(
+                                "${itemData["name"]}",
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
-                                    fontSize: 8, color: Colors.black38),
+                                  fontSize: 16,
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              Text(
-                                '${repoData[index]["update_at"]}',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 8, color: Colors.black38),
+                            ),
+                            Text(
+                              '${itemData["description"]}',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
                               ),
-                            ],
-                          )
-                        ],
-                      )
+                              softWrap: true,
+                              maxLines: 3,
+                            ),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                              child: Row(
+                                children: <Widget>[
+                                  _genStartIcon(0, forks),
+                                  _genStartIcon(1, forks),
+                                  _genStartIcon(2, forks),
+                                  _genStartIcon(3, forks),
+                                  _genStartIcon(4, forks),
+                                  Container(
+                                      padding: const EdgeInsets.only(left: 15),
+                                      child: Text(
+                                        "create : " +
+                                            itemData["created_at"]
+                                                .toString()
+                                                .split("T")[0],
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.lightGreen),
+                                      )),
+                                  Container(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Text(
+                                        "update : " +
+                                            itemData["updated_at"]
+                                                .toString()
+                                                .split("T")[0],
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.lightGreen),
+                                      )),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ],
-                  ));
+                  )),
+              ) ;
             },
           );
         }
@@ -129,27 +162,27 @@ class UserFeedPageState extends State<UserFeedPage> {
     );
   }
 
+  // for start's icon
   Icon _genStartIcon(int index, int forks) {
-    double size = (forks / 500.0);
-    if (size - index > 1) {
+    double flag = (forks / 500.0) - index;
+    if (flag > 1) {
       return Icon(
         Icons.star,
         color: Colors.blue,
         size: 12,
       );
-    } else if (size - index > 0.5) {
+    } else if (flag > 0.5) {
       return Icon(
         Icons.star_half,
         color: Colors.blue,
         size: 12,
       );
-    } else {
-      return Icon(
-        Icons.star_border,
-        color: Colors.grey,
-        size: 12,
-      );
     }
+    return Icon(
+      Icons.star_border,
+      color: Colors.grey,
+      size: 12,
+    );
   }
 
   _loadGitData() async {

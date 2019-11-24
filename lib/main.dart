@@ -5,7 +5,7 @@ import 'package:karaoke_flutter/page/MessagePage.dart';
 import 'package:karaoke_flutter/page/NotificationPage.dart';
 import 'package:karaoke_flutter/page/SearchPage.dart';
 import 'package:karaoke_flutter/page/UserFeedPage.dart';
-import 'package:karaoke_flutter/utils/LogUtils.dart';
+import 'channel/LogUtils.dart';
 
 void main() => runApp(MyApp());
 var TAG = "Main";
